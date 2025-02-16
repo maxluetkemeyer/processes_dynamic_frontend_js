@@ -19,18 +19,26 @@ export default function Home() {
 
   //useEffect(() => drawPartial(svg1, nodes), [svg1, nodes]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStep((prev) => (prev < 2 ? prev + 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer); // Cleanup interval on component unmount
+  });
+
   return (
     <main>
-      <p>Full:</p>
+      {/* <p>Full:</p>
       <svg
         ref={svg0}
         width="600"
         height="500"
-        style={{ display: "none" }}
-      ></svg>
-      <p>Second:</p>
+        style={{ display: "block" }}
+      ></svg> */}
+      {/* <p>Second:</p> */}
 
-      <svg width="600" height="500">
+      <svg ref={svg0} width="600" height="500">
         {getCurrentNodes(nodes, step).map((node, index) => (
           <React.Fragment key={"myfragment" + index}>
             <circle
@@ -71,7 +79,7 @@ export default function Home() {
           onChange={(e) => setStep(parseInt(e.target.value, 10))}
           className="w-64"
         />
-        <span className="mt-2 text-lg font-semibold">Value: {step}</span>
+        <span className="mt-2 text-lg font-semibold">Week: {step}</span>
       </div>
     </main>
   );

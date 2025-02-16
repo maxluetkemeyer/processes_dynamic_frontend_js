@@ -27,3 +27,8 @@ text {
     text-anchor: middle;
     fill: black;
 }
+
+.my-disabled {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.2;
+}

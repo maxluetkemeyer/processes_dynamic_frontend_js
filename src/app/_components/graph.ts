@@ -26,7 +26,7 @@ function doD3(
       d3
         .forceLink(links)
         .id((d) => d.id)
-        .distance(100),
+        .distance(110),
     )
     .force("charge", d3.forceManyBody().strength(-300))
     .force("x", d3.forceX(width / 2)) // Center horizontally
@@ -45,7 +45,7 @@ function doD3(
     .data(links)
     .enter()
     .append("line")
-    .attr("class", "link");
+    .attr("class", "link my-disabled");
 
   // Draw nodes
   const svgNodes = svg
@@ -53,17 +53,17 @@ function doD3(
     .data(nodes)
     .enter()
     .append("circle")
-    .attr("class", "node")
+    .attr("class", "node my-disabled")
     .attr("r", 10);
 
   // Add labels
-  const label = svg
-    .selectAll("text")
-    .data(nodes)
-    .enter()
-    .append("text")
-    .attr("dy", -15)
-    .text((d) => d.id);
+  // const label = svg
+  //   .selectAll("text")
+  //   .data(nodes)
+  //   .enter()
+  //   .append("text")
+  //   .attr("dy", -15)
+  //   .text((d) => d.id);
 
   // Function to update positions
   function ticked() {
@@ -75,7 +75,7 @@ function doD3(
 
     svgNodes.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 
-    label.attr("x", (d) => d.x).attr("y", (d) => d.y);
+    //label.attr("x", (d) => d.x).attr("y", (d) => d.y);
   }
 }
 
