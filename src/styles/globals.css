@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body, main {
+    background-color: lightgray;
+    display: flex;
+    flex-direction: row;
+}
+
+svg {
+    background-color: white;
+}
+
+.link {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 2px;
+}
+.node {
+    fill: #69b3a2;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+text {
+    font-size: 14px;
+    text-anchor: middle;
+    fill: black;
+}
