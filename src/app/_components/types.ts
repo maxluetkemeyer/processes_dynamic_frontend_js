@@ -5,9 +5,10 @@ export interface MyNode extends d3.SimulationNodeDatum {
   y: number;
 }
 
-export interface MyLink extends d3.SimulationNodeDatum {
-  source: string;
-  target: string
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface MyLink extends d3.SimulationLinkDatum<MyNode> {
+  // source: string;
+  // target: string
 }
 
 export function getNodes() {
@@ -21,7 +22,7 @@ export function getNodes() {
 }
 
 export function getLinks() {
-  const links = [
+  const links: MyLink[] = [
     { source: "A", target: "B" },
     { source: "B", target: "C" },
     { source: "C", target: "D" },

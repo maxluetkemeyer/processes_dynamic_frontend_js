@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { type RefObject } from "react";
-import { getLinks, getNodes, type MyLink, type MyNode } from "./types";
+import { type Dispatch, type SetStateAction, type RefObject } from "react";
+import { type MyLink, type MyNode } from "./types";
 import { calculateLevels } from "./level";
 
 const width = 600,
@@ -10,7 +10,11 @@ function doD3(
   svg0: RefObject<SVGSVGElement>,
   nodes: MyNode[],
   links: MyLink[],
+  setNodes: Dispatch<SetStateAction<MyNode[]>>,
+  setLinks: Dispatch<SetStateAction<MyLink[]>>
 ) {
+  calculateLevels(nodes, links);
+
   // Create SVG canvas
   const svg = d3.select(svg0.current);
 
@@ -29,8 +33,11 @@ function doD3(
     .force("y", d3.forceY((d: MyNode) => d.level * 100).strength(1)) // Force downward
     .on("tick", () => {
       ticked();
-
-    });
+    })
+    .on("end", () => {
+      setNodes([...nodes]);
+      setLinks([...links])
+    })
 
   // Draw links
   const link = svg
@@ -70,41 +77,14 @@ function doD3(
 
     label.attr("x", (d) => d.x).attr("y", (d) => d.y);
   }
-
-  return nodes;
 }
 
 export function runGraph(
   svg0: RefObject<SVGSVGElement>,
   nodes: MyNode[],
-  links: MyLink[]
+  links: MyLink[],
+  setNodes: Dispatch<SetStateAction<MyNode[]>>,
+  setLinks: Dispatch<SetStateAction<MyLink[]>>
 ) {
-  calculateLevels(nodes, links);
-
-  const myNodes = doD3(svg0, nodes, links);
-}
-
-export function drawPartial(svg1: RefObject<SVGSVGElement>, nodes: MyNode[]) {
-  console.log(nodes)
-  for(const node of nodes){
-    console.log(node)
-  }
-  
-  
-  const svg = d3
-    .select(svg1.current)
-    .attr("width", width)
-    .attr("height", height);
-
-  const svgNodes = svg
-    .selectAll(".node")
-    .data(nodes)
-    .enter()
-    .append("circle")
-    .attr("class", "node")
-    .attr("r", 10)
-    .attr("cx", (d) => {
-      return d.x;
-    })
-    .attr("cy", (d) => d.y);
+  doD3(svg0, nodes, links, setNodes, setLinks);
 }

@@ -1,37 +1,78 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { drawPartial, runGraph } from "./_components/graph";
+import { runGraph } from "./_components/graph";
 import { getLinks, getNodes } from "./_components/types";
+import React from "react";
+import { getCurrentLinks, getCurrentNodes } from "./_components/dynamic";
 
 export default function Home() {
-  const svg0 = useRef<SVGSVGElement>(null), svg1 = useRef<SVGSVGElement>(null);
+  const svg0 = useRef<SVGSVGElement>(null);
 
-  const [nodes, setNodes] = useState(getNodes())
-  const [links, setLinks] = useState(getLinks())
+  const [nodes, setNodes] = useState(getNodes());
+  const [links, setLinks] = useState(getLinks());
+
+  const [step, setStep] = useState(0);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => runGraph(svg0, nodes, links), [svg0, nodes]);
+  useEffect(() => runGraph(svg0, nodes, links, setNodes, setLinks), [svg0]);
 
   //useEffect(() => drawPartial(svg1, nodes), [svg1, nodes]);
 
   return (
     <main>
-      <h1>Full:</h1>
-      <svg ref={svg0} width="600" height="500"></svg>
-      <h1>Second:</h1>
+      <p>Full:</p>
+      <svg
+        ref={svg0}
+        width="600"
+        height="500"
+        style={{ display: "none" }}
+      ></svg>
+      <p>Second:</p>
 
       <svg width="600" height="500">
-        {nodes.map((node, index) => (
-          <circle
-            key={"mynode"+index}
-            cx={node.x}
-            cy={node.y}
-            r={10}
-            className={"node"}
+        {getCurrentNodes(nodes, step).map((node, index) => (
+          <React.Fragment key={"myfragment" + index}>
+            <circle
+              key={"mynode" + index}
+              cx={node.x}
+              cy={node.y}
+              r={10}
+              className={"node"}
+            />
+            <text
+              key={"mytext" + index}
+              x={node.x}
+              y={node.y - 15}
+              textAnchor="middle"
+            >
+              {node.id}
+            </text>
+          </React.Fragment>
+        ))}
+        {getCurrentLinks(links, step).map((link, index) => (
+          <line 
+            key={"myline"+index}
+            className={"link"}
+            x1={link.source.x}
+            y1={link.source.y}
+            x2={link.target.x}
+            y2={link.target.y}
           />
         ))}
       </svg>
+      <div className="flex flex-col items-center p-4">
+        <input
+          type="range"
+          min={0}
+          max={2}
+          step={1}
+          value={step}
+          onChange={(e) => setStep(parseInt(e.target.value, 10))}
+          className="w-64"
+        />
+        <span className="mt-2 text-lg font-semibold">Value: {step}</span>
+      </div>
     </main>
   );
 }
