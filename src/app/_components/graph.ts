@@ -7,7 +7,7 @@ const width = 600,
   height = 500;
 
 function doD3(
-  svg0: RefObject<SVGSVGElement>,
+  svg0: RefObject<SVGSVGElement | null>,
   nodes: MyNode[],
   links: MyLink[],
   setNodes: Dispatch<SetStateAction<MyNode[]>>,
@@ -80,7 +80,7 @@ function doD3(
 }
 
 export function runGraph(
-  svg0: RefObject<SVGSVGElement>,
+  svg0: RefObject<SVGSVGElement | null>,
   nodes: MyNode[],
   links: MyLink[],
   setNodes: Dispatch<SetStateAction<MyNode[]>>,
