@@ -1,14 +1,11 @@
-import * as React from "react"
-
-
+import * as React from "react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-
-} from "~/components/ui/sidebar"
+} from "~/components/ui/sidebar";
 
 // This is sample data.
 // const data = {
@@ -61,5 +58,5 @@ export function SidebarRight({
         </SidebarMenu> */}
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

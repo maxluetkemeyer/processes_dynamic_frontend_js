@@ -7,9 +7,9 @@ import React from "react";
 import { getCurrentLinks, getCurrentNodes } from "../_components/dynamic";
 
 export default function Home() {
-  if(typeof window !== "undefined") {
+  if (typeof window !== "undefined") {
     console.log("window is defined");
-  }else {
+  } else {
     console.log("window is not defined");
   }
 
@@ -56,8 +56,8 @@ export default function Home() {
           </React.Fragment>
         ))}
         {getCurrentLinks(links, step).map((link, index) => (
-          <line 
-            key={"myline"+index}
+          <line
+            key={"myline" + index}
             className={"link"}
             x1={link.source.x}
             y1={link.source.y}

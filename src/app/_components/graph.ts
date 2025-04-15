@@ -11,7 +11,7 @@ function doD3(
   nodes: MyNode[],
   links: MyLink[],
   setNodes: Dispatch<SetStateAction<MyNode[]>>,
-  setLinks: Dispatch<SetStateAction<MyLink[]>>
+  setLinks: Dispatch<SetStateAction<MyLink[]>>,
 ) {
   calculateLevels(nodes, links);
 
@@ -36,8 +36,8 @@ function doD3(
     })
     .on("end", () => {
       setNodes([...nodes]);
-      setLinks([...links])
-    })
+      setLinks([...links]);
+    });
 
   // Draw links
   const link = svg
@@ -84,7 +84,7 @@ export function runGraph(
   nodes: MyNode[],
   links: MyLink[],
   setNodes: Dispatch<SetStateAction<MyNode[]>>,
-  setLinks: Dispatch<SetStateAction<MyLink[]>>
+  setLinks: Dispatch<SetStateAction<MyLink[]>>,
 ) {
   doD3(svg0, nodes, links, setNodes, setLinks);
 }
