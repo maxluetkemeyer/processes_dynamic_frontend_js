@@ -1,14 +1,3 @@
-body,
-main {
-  background-color: lightgray;
-  display: flex;
-  flex-direction: row;
-}
-
-svg {
-  background-color: white;
-}
-
 .link {
   stroke: #999;
   stroke-opacity: 0.6;

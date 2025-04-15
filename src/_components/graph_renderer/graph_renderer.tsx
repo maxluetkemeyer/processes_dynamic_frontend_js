@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { runGraph } from "../_components/graph";
-import { getLinks, getNodes } from "../_components/types";
 import React from "react";
-import { getCurrentLinks, getCurrentNodes } from "../_components/dynamic";
+import { getLinks, getNodes } from "./types";
+import { runGraph } from "./graph";
+import { getCurrentLinks, getCurrentNodes } from "./dynamic";
 
-export default function Home() {
+import "~/styles/graph_renderer.css";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+
+export function GraphRenderer() {
   if (typeof window !== "undefined") {
     console.log("window is defined");
   } else {
@@ -25,17 +34,13 @@ export default function Home() {
 
   //useEffect(() => drawPartial(svg1, nodes), [svg1, nodes]);
   return (
-    <main>
-      {/* <p>Full:</p>
+    <div className="w-full">
       <svg
         ref={svg0}
-        width="600"
-        height="500"
-        style={{ display: "block" }}
-      ></svg> */}
-      {/* <p>Second:</p> */}
-
-      <svg ref={svg0} width="600" height="500">
+        width="100%"
+        height="100%"
+        className="h-11/12 w-full"
+      >
         {getCurrentNodes(nodes, step).map((node, index) => (
           <React.Fragment key={"myfragment" + index}>
             <circle
@@ -43,7 +48,7 @@ export default function Home() {
               cx={node.x}
               cy={node.y}
               r={10}
-              className={"node"}
+              className="node"
             />
             <text
               key={"mytext" + index}
@@ -58,7 +63,7 @@ export default function Home() {
         {getCurrentLinks(links, step).map((link, index) => (
           <line
             key={"myline" + index}
-            className={"link"}
+            className="link"
             x1={link.source.x}
             y1={link.source.y}
             x2={link.target.x}
@@ -66,18 +71,38 @@ export default function Home() {
           />
         ))}
       </svg>
-      <div className="flex flex-col items-center p-4">
+      <GraphTimeLine
+        step={step}
+        onChange={(e) => setStep(parseInt(e.target.value, 10))}
+      />
+    </div>
+  );
+}
+
+export function GraphTimeLine({
+  step,
+  onChange,
+}: {
+  step: number;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <Card className="h-1/12 w-full gap-1 py-2 bg-gray-100">
+      <CardHeader>
+        <CardTitle>Week {step}</CardTitle>
+        {/* <CardDescription>Card Description</CardDescription> */}
+      </CardHeader>
+      <CardContent>
         <input
           type="range"
           min={0}
           max={2}
           step={1}
           value={step}
-          onChange={(e) => setStep(parseInt(e.target.value, 10))}
-          className="w-64"
+          onChange={onChange}
+          className="w-full"
         />
-        <span className="mt-2 text-lg font-semibold">Week: {step}</span>
-      </div>
-    </main>
+      </CardContent>
+    </Card>
   );
 }

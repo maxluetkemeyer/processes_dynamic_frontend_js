@@ -1,4 +1,5 @@
-import { ReactScan } from "~/app/_components/react_scan";
+import { ReactScan } from "~/_components/react_scan";
+import Dashboard from "~/components/dashboard";
 import "~/styles/globals.css";
 
 export default function RootLayout({
@@ -7,7 +8,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ReactScan />
-      <body>{children}</body>
+      <body>
+        <Dashboard>{children}</Dashboard>
+      </body>
     </html>
   );
 }
