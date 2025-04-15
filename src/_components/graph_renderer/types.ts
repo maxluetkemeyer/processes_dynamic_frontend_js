@@ -8,4 +8,5 @@ export interface MyNode extends d3.SimulationNodeDatum {
 
 export interface MyLink extends d3.SimulationLinkDatum<MyNode> {
   steps: number[];
+  weight?: number;
 }

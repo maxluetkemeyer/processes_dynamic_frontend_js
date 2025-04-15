@@ -2,18 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import React from "react";
-import { getLinks, getNodes } from "./example_data";
 import { runGraph } from "./graph";
 
 import "~/styles/graph_renderer.css";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { calculateLevels } from "./level";
-import { type MyNode } from "./types";
+import { type MyLink, type MyNode } from "./types";
 
-export function GraphRenderer() {
+export function GraphRenderer({
+  nodesParam,
+  linksParam,
+  maxSteps,
+}: {
+  nodesParam: MyNode[];
+  linksParam: MyLink[];
+  maxSteps: number;
+}) {
   const svg0 = useRef<SVGSVGElement>(null);
-  const [nodes, setNodes] = useState(getNodes());
-  const [links, setLinks] = useState(getLinks());
+  const [nodes, setNodes] = useState(nodesParam);
+  const [links, setLinks] = useState(linksParam);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -21,6 +28,14 @@ export function GraphRenderer() {
     runGraph(svg0, nodes, links, setNodes, setLinks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [svg0]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [maxSteps]);
 
   return (
     <div className="w-full">
@@ -67,6 +82,8 @@ export function GraphRenderer() {
       <GraphTimeLine
         step={step}
         onChange={(e) => setStep(parseFloat(e.target.value))}
+        maxSteps={maxSteps}
+        onIntervalChange={(myStep) => setStep(myStep)}
       />
     </div>
   );
@@ -75,9 +92,13 @@ export function GraphRenderer() {
 export function GraphTimeLine({
   step,
   onChange,
+  maxSteps,
+  onIntervalChange,
 }: {
   step: number;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  maxSteps: number;
+  onIntervalChange: (step: number) => void;
 }) {
   return (
     <Card className="h-1/12 w-full gap-1 bg-gray-100 py-2">
@@ -89,7 +110,7 @@ export function GraphTimeLine({
         <input
           type="range"
           min={0}
-          max={2}
+          max={maxSteps}
           step={0.1}
           value={step}
           onChange={onChange}
