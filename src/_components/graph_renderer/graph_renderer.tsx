@@ -2,45 +2,31 @@
 
 import { useEffect, useRef, useState } from "react";
 import React from "react";
-import { getLinks, getNodes } from "./types";
+import { getLinks, getNodes } from "./example_data";
 import { runGraph } from "./graph";
 import { getCurrentLinks, getCurrentNodes } from "./dynamic";
 
 import "~/styles/graph_renderer.css";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { calculateLevels } from "./level";
+import { type MyNode } from "./types";
 
 export function GraphRenderer() {
-  if (typeof window !== "undefined") {
-    console.log("window is defined");
-  } else {
-    console.log("window is not defined");
-  }
-
   const svg0 = useRef<SVGSVGElement>(null);
-
   const [nodes, setNodes] = useState(getNodes());
   const [links, setLinks] = useState(getLinks());
-
   const [step, setStep] = useState(0);
 
+  useEffect(() => {
+    calculateLevels(nodes, links);
+    runGraph(svg0, nodes, links, setNodes, setLinks);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => runGraph(svg0, nodes, links, setNodes, setLinks), [svg0]);
+  }, [svg0]);
 
-  //useEffect(() => drawPartial(svg1, nodes), [svg1, nodes]);
+
   return (
     <div className="w-full">
-      <svg
-        ref={svg0}
-        width="100%"
-        height="100%"
-        className="h-11/12 w-full"
-      >
+      <svg ref={svg0} width="100%" height="100%" className="h-11/12 w-full">
         {getCurrentNodes(nodes, step).map((node, index) => (
           <React.Fragment key={"myfragment" + index}>
             <circle
@@ -64,10 +50,10 @@ export function GraphRenderer() {
           <line
             key={"myline" + index}
             className="link"
-            x1={link.source.x}
-            y1={link.source.y}
-            x2={link.target.x}
-            y2={link.target.y}
+            x1={(link.source as MyNode).x}
+            y1={(link.source as MyNode).y}
+            x2={(link.target as MyNode).x}
+            y2={(link.target as MyNode).y}
           />
         ))}
       </svg>
@@ -87,7 +73,7 @@ export function GraphTimeLine({
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <Card className="h-1/12 w-full gap-1 py-2 bg-gray-100">
+    <Card className="h-1/12 w-full gap-1 bg-gray-100 py-2">
       <CardHeader>
         <CardTitle>Week {step}</CardTitle>
         {/* <CardDescription>Card Description</CardDescription> */}

@@ -1,11 +1,5 @@
 import { type MyLink, type MyNode } from "./types";
 
-interface MyCombi {
-  nodes: MyNode[];
-  links: MyLink[];
-  step: number;
-}
-
 export function getCurrentNodes(nodes: MyNode[], step: number) {
   let active: string[] = [];
 
@@ -50,7 +44,10 @@ export function getCurrentLinks(links: MyLink[], step: number) {
   }
 
   const filtered = links.filter((link, _, __) => {
-    return active.includes(link.source.id) && active.includes(link.target.id);
+    return (
+      active.includes((link.source as MyNode).id) &&
+      active.includes((link.target as MyNode).id)
+    );
   });
 
   return filtered;
