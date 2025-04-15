@@ -3,6 +3,9 @@ export interface MyNode extends d3.SimulationNodeDatum {
   level: number;
   x: number;
   y: number;
+  steps: number[];
 }
 
-export type MyLink = d3.SimulationLinkDatum<MyNode>;
+export interface MyLink extends d3.SimulationLinkDatum<MyNode> {
+  steps: number[];
+}

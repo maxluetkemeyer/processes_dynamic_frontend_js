@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import React from "react";
 import { getLinks, getNodes } from "./example_data";
 import { runGraph } from "./graph";
-import { getCurrentLinks, getCurrentNodes } from "./dynamic";
 
 import "~/styles/graph_renderer.css";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -20,33 +19,13 @@ export function GraphRenderer() {
   useEffect(() => {
     calculateLevels(nodes, links);
     runGraph(svg0, nodes, links, setNodes, setLinks);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [svg0]);
-
 
   return (
     <div className="w-full">
       <svg ref={svg0} width="100%" height="100%" className="h-11/12 w-full">
-        {getCurrentNodes(nodes, step).map((node, index) => (
-          <React.Fragment key={"myfragment" + index}>
-            <circle
-              key={"mynode" + index}
-              cx={node.x}
-              cy={node.y}
-              r={10}
-              className="node"
-            />
-            <text
-              key={"mytext" + index}
-              x={node.x}
-              y={node.y - 15}
-              textAnchor="middle"
-            >
-              {node.id}
-            </text>
-          </React.Fragment>
-        ))}
-        {getCurrentLinks(links, step).map((link, index) => (
+        {links.map((link, index) => (
           <line
             key={"myline" + index}
             className="link"
@@ -54,12 +33,40 @@ export function GraphRenderer() {
             y1={(link.source as MyNode).y}
             x2={(link.target as MyNode).x}
             y2={(link.target as MyNode).y}
+            style={{
+              opacity: Math.max(0, detectProximity(link.steps, step)),
+            }}
           />
+        ))}
+        {nodes.map((node, index) => (
+          <React.Fragment key={"myfragment" + index}>
+            <circle
+              key={"mynode" + index}
+              cx={node.x}
+              cy={node.y}
+              r={10}
+              className="node"
+              style={{
+                opacity: Math.max(0, detectProximity(node.steps, step)),
+              }}
+            />
+            <text
+              key={"mytext" + index}
+              x={node.x}
+              y={node.y - 15}
+              textAnchor="middle"
+              style={{
+                opacity: Math.max(0, detectProximity(node.steps, step)),
+              }}
+            >
+              {node.id}
+            </text>
+          </React.Fragment>
         ))}
       </svg>
       <GraphTimeLine
         step={step}
-        onChange={(e) => setStep(parseInt(e.target.value, 10))}
+        onChange={(e) => setStep(parseFloat(e.target.value))}
       />
     </div>
   );
@@ -75,7 +82,7 @@ export function GraphTimeLine({
   return (
     <Card className="h-1/12 w-full gap-1 bg-gray-100 py-2">
       <CardHeader>
-        <CardTitle>Week {step}</CardTitle>
+        <CardTitle>Step {step}</CardTitle>
         {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>
       <CardContent>
@@ -83,7 +90,7 @@ export function GraphTimeLine({
           type="range"
           min={0}
           max={2}
-          step={1}
+          step={0.1}
           value={step}
           onChange={onChange}
           className="w-full"
@@ -91,4 +98,37 @@ export function GraphTimeLine({
       </CardContent>
     </Card>
   );
+}
+
+/**
+ * Checks proximity between controller value and array elements
+ * @param numbers - Integer array (0-50)
+ * @param controller - Control value (0.0-50.0)
+ * @param tolerance - Detection threshold (default 1.0)
+ *
+ * @returns Proximity value (0.0-1.0)
+ */
+function detectProximity(
+  numbers: number[],
+  controller: number,
+  tolerance = 1.0,
+): number {
+  // Validation checks
+  if (!numbers.every((n) => Number.isInteger(n) && n >= 0 && n <= 50)) {
+    throw new Error("Array contains invalid integers");
+  }
+
+  if (controller < 0 || controller > 50) {
+    throw new RangeError("Controller value out of bounds");
+  }
+
+  let distance = Infinity;
+  // Proximity detection
+  numbers.forEach((num) => {
+    const difference = Math.abs(controller - num);
+    if (difference > tolerance) return;
+    distance = Math.min(distance, difference);
+  });
+
+  return 1 - distance / tolerance;
 }

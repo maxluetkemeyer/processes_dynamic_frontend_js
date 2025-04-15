@@ -2,7 +2,7 @@ import { type MyLink, type MyNode } from "./types";
 
 export function getCurrentNodes(nodes: MyNode[], step: number) {
   let active: string[] = [];
-
+  console.log(nodes.map((node) => node.id));
   switch (step) {
     case 0:
       active = ["A", "D"];

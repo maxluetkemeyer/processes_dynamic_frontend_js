@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { type Dispatch, type SetStateAction, type RefObject } from "react";
 import { type MyLink, type MyNode } from "./types";
 
+/// Runs the D3 simulation and renders the graph
 export function runGraph(
   svg0: RefObject<SVGSVGElement | null>,
   nodes: MyNode[],

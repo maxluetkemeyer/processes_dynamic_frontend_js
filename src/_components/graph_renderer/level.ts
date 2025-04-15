@@ -1,5 +1,6 @@
 import { type MyLink, type MyNode } from "./types";
 
+/// Calculates the levels of nodes based on their connections
 export function calculateLevels(nodes: MyNode[], links: MyLink[]) {
   let changed = false;
 
