@@ -28,13 +28,13 @@ export function GraphRenderer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [svg0]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
-  //   }, 100);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
+    }, 300);
 
-  //   return () => clearInterval(interval);
-  // }, [maxSteps]);
+    return () => clearInterval(interval);
+  }, [maxSteps]);
 
   return (
     <div className="w-full">
@@ -102,7 +102,6 @@ export function GraphRenderer({
         step={step}
         onChange={(e) => setStep(parseFloat(e.target.value))}
         maxSteps={maxSteps}
-        onIntervalChange={(myStep) => setStep(myStep)}
       />
     </div>
   );
@@ -116,12 +115,11 @@ export function GraphTimeLine({
   step: number;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   maxSteps: number;
-  onIntervalChange: (step: number) => void;
 }) {
   return (
     <Card className="h-1/12 w-full gap-1 bg-gray-100 py-2">
       <CardHeader>
-        <CardTitle>Step {step}</CardTitle>
+        <CardTitle>Step {step.toFixed(1)}</CardTitle>
         {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>
       <CardContent>
@@ -162,12 +160,19 @@ function detectProximity(
   }
 
   let distance = Infinity;
+  let maxDistanceTo1 = 0;
   // Proximity detection
   numbers.forEach((num) => {
     const difference = Math.abs(controller - num);
     if (difference > tolerance) return;
     distance = Math.min(distance, difference);
+
+    maxDistanceTo1 = Math.max(maxDistanceTo1, 1 - difference / tolerance);
   });
+
+  if (maxDistanceTo1 >= 0.5) {
+    return 1;
+  }
 
   return 1 - distance / tolerance;
 }
