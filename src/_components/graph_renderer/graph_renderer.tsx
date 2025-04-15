@@ -6,7 +6,6 @@ import { runGraph } from "./graph";
 
 import "~/styles/graph_renderer.css";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { calculateLevels } from "./level";
 import { type MyLink, type MyNode } from "./types";
 
 export function GraphRenderer({
@@ -24,22 +23,41 @@ export function GraphRenderer({
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    calculateLevels(nodes, links);
+    //calculateLevels(nodes, links);
     runGraph(svg0, nodes, links, setNodes, setLinks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [svg0]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
-    }, 100);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
+  //   }, 100);
 
-    return () => clearInterval(interval);
-  }, [maxSteps]);
+  //   return () => clearInterval(interval);
+  // }, [maxSteps]);
 
   return (
     <div className="w-full">
       <svg ref={svg0} width="100%" height="100%" className="h-11/12 w-full">
+        <defs>
+          {/* A marker to be used as an arrowhead */}
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="20"
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path
+              d="M 0 0 L 10 5 L 0 10 z"
+              stroke="context-stroke"
+              fill="context-fill"
+            />
+          </marker>
+        </defs>
+
         {links.map((link, index) => (
           <line
             key={"myline" + index}
@@ -51,6 +69,7 @@ export function GraphRenderer({
             style={{
               opacity: Math.max(0, detectProximity(link.steps, step)),
             }}
+            markerEnd="url(#arrow)"
           />
         ))}
         {nodes.map((node, index) => (
@@ -93,7 +112,6 @@ export function GraphTimeLine({
   step,
   onChange,
   maxSteps,
-  onIntervalChange,
 }: {
   step: number;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

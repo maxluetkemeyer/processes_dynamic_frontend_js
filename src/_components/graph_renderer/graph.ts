@@ -32,11 +32,12 @@ function doD3(
       d3
         .forceLink(links)
         .id((d) => (d as MyNode).id)
-        .distance(110),
+        .distance(300),
     )
-    .force("charge", d3.forceManyBody().strength(-300))
+    .force("charge", d3.forceManyBody().strength(-1000)) // Increase repulsion
+    .force("collision", d3.forceCollide().radius(50)) // Add collision detection
     .force("x", d3.forceX(width / 2)) // Center horizontally
-    .force("y", d3.forceY((d: MyNode) => d.level * 100).strength(1)) // Force downward
+    .force("y", d3.forceY((d: MyNode) => d.level * 150).strength(1.8)) // Force downward
     .on("tick", () => {
       ticked();
     })
