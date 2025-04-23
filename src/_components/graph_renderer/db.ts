@@ -14,7 +14,10 @@ export interface EventLogWindows {
   edges: [[string, string, number]];
 }
 
-export const collections: { mylog?: mongoDB.Collection, mylogWindows?: mongoDB.Collection } = {};
+export const collections: {
+  mylog?: mongoDB.Collection;
+  mylogWindows?: mongoDB.Collection;
+} = {};
 
 export async function connectToDatabase() {
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
@@ -27,7 +30,8 @@ export async function connectToDatabase() {
   const myLogConnection: mongoDB.Collection = db.collection("mylog");
   collections.mylog = myLogConnection;
 
-  const myLogWindowsConnection: mongoDB.Collection = db.collection("mylog-windows");
+  const myLogWindowsConnection: mongoDB.Collection =
+    db.collection("mylog-windows");
   collections.mylogWindows = myLogWindowsConnection;
 
   console.log(
@@ -41,56 +45,64 @@ export async function fetchEventLog(): Promise<EventLog> {
 }
 
 export async function fetchEventLogWindows(): Promise<EventLogWindows[]> {
-  const myWindows = (await collections.mylogWindows!.find({}).toArray()) as unknown as EventLogWindows[]; //TODO: handle error
+  const myWindows = (await collections
+    .mylogWindows!.find({})
+    .toArray()) as unknown as EventLogWindows[]; //TODO: handle error
   return myWindows;
 }
 
 export function createMyNodeList(myDoc: EventLog) {
-    const nodes = myDoc.activities.map<MyNode>((activity) => ({
-        id: activity,
-        level: 0,
-        x: 0,
-        y: 0,
-        steps: [],
-    }));
-    
-    return nodes;
+  const nodes = myDoc.activities.map<MyNode>((activity) => ({
+    id: activity,
+    level: 0,
+    x: 0,
+    y: 0,
+    steps: [],
+  }));
+
+  return nodes;
 }
 
 export function createMyLinkList(myDoc: EventLog) {
-    const links = myDoc.edges.map((edge) => ({
-        source: edge[0],
-        target: edge[1],
-        weight: edge[2],
-        steps: []
-    }));
-    
-    return links;
+  const links = myDoc.edges.map((edge) => ({
+    source: edge[0],
+    target: edge[1],
+    weight: edge[2],
+    steps: [],
+  }));
+
+  return links;
 }
 
-export function extractSteps(nodes: MyNode[], links: MyLink[], myWindows: EventLogWindows[]) {
-    for(let i = 0; i < myWindows.length; i++) {
-        const step = i;
-        const window = myWindows[i]!;
+export function extractSteps(
+  nodes: MyNode[],
+  links: MyLink[],
+  myWindows: EventLogWindows[],
+) {
+  for (let i = 0; i < myWindows.length; i++) {
+    const step = i;
+    const window = myWindows[i]!;
 
-        for (const activity of window.activities) {
-            const node = nodes.find(node => node.id === activity);
-            if (node) {
-                node.steps.push(step);
-            } else {
-                console.warn(`Node with id ${activity} not found in nodes.`);
-            }
-        }
-
-        for (const edge of window.edges) {
-            const source = edge[0];
-            const target = edge[1];
-            const link = links.find(link => link.source === source && link.target === target);
-            if (link) {
-                link.steps.push(step);
-            } else {
-                console.warn(`Link from ${source} to ${target} not found in links.`);
-            }
-        }
+    for (const activity of window.activities) {
+      const node = nodes.find((node) => node.id === activity);
+      if (node) {
+        node.steps.push(step);
+      } else {
+        console.warn(`Node with id ${activity} not found in nodes.`);
+      }
     }
+
+    for (const edge of window.edges) {
+      const source = edge[0];
+      const target = edge[1];
+      const link = links.find(
+        (link) => link.source === source && link.target === target,
+      );
+      if (link) {
+        link.steps.push(step);
+      } else {
+        console.warn(`Link from ${source} to ${target} not found in links.`);
+      }
+    }
+  }
 }

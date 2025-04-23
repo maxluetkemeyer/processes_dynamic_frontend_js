@@ -1,4 +1,9 @@
 import * as React from "react";
+import { EdgeSelection } from "~/app/[log]/graph/_components/edges_selection";
+import { FieldSelector } from "~/app/[log]/graph/_components/field_selector";
+import { IndicatorSelection } from "~/app/[log]/graph/_components/indicator_selection";
+import { WhatsInside } from "~/app/[log]/graph/_components/whats_inside";
+import { WindowSelecion } from "~/app/[log]/graph/_components/window_selection";
 
 import {
   Sidebar,
@@ -7,40 +12,25 @@ import {
   SidebarHeader,
 } from "~/components/ui/sidebar";
 
-// This is sample data.
-// const data = {
-//   user: {
-//     name: "shadcn",
-//     email: "m@example.com",
-//     avatar: "/avatars/shadcn.jpg",
-//   },
-//   calendars: [
-//     {
-//       name: "My Calendars",
-//       items: ["Personal", "Work", "Family"],
-//     },
-//     {
-//       name: "Favorites",
-//       items: ["Holidays", "Birthdays"],
-//     },
-//     {
-//       name: "Other",
-//       items: ["Travel", "Reminders", "Deadlines"],
-//     },
-//   ],
-// }
-
 export function SidebarRight({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="none"
-      className="sticky top-0 hidden h-svh border-l lg:flex"
+      className=" top-0 hidden border-l lg:flex" // sticky
       {...props}
     >
       <SidebarHeader className="border-sidebar-border h-16 border-b">
-        {/* <NavUser user={data.user} /> */}
+        <FieldSelector />
+        <div className="mt-2 mb-2 border-b-2"></div>
+        <WhatsInside />
+        <div className="mt-2 mb-2 border-b-2"></div>
+        <WindowSelecion />
+        <div className="mt-2 mb-2 border-b-2"></div>
+        <EdgeSelection />
+        <div className="mt-2 mb-2 border-b-2"></div>
+        <IndicatorSelection />
       </SidebarHeader>
       <SidebarContent>
         {/* <DatePicker />

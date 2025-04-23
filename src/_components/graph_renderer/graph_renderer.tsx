@@ -28,13 +28,13 @@ export function GraphRenderer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [svg0]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
-    }, 300);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setStep((prevStep) => (prevStep + 0.1 > maxSteps ? 0 : prevStep + 0.1));
+  //   }, 100);
 
-    return () => clearInterval(interval);
-  }, [maxSteps]);
+  //   return () => clearInterval(interval);
+  // }, [maxSteps]);
 
   return (
     <div className="w-full">

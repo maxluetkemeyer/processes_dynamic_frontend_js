@@ -11,6 +11,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
+import { NavFavorites } from "./nav-favorites";
+import { Separator } from "@radix-ui/react-separator";
 
 // This is sample data.
 const data = {
@@ -41,13 +43,37 @@ const data = {
 };
 
 export function SidebarLeft({
+  sidebarItems = [],
+  activeItem = "",
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: { sidebarItems: string[]; activeItem: string } & React.ComponentProps<
+  typeof Sidebar
+>) {
+  console.log("sidebarItems", sidebarItems);
+
+  const navMain = sidebarItems.map((item) => ({
+    title: item,
+    url: `/${item}/graph`,
+    icon: Inbox,
+    isActive: item === activeItem,
+  }));
+
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
-        <NavMain items={data.navMain} />
+        <NavMain
+          items={[
+            {
+              title: "Home",
+              url: "/",
+              icon: Home,
+              isActive: activeItem === "",
+            },
+          ]}
+        />
+        <Separator className="border-1" />
+        <NavMain items={navMain} />
       </SidebarHeader>
       <SidebarContent>
         {/* <NavFavorites favorites={data.favorites} /> */}

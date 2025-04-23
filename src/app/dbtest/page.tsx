@@ -1,4 +1,11 @@
-import { connectToDatabase, createMyLinkList, createMyNodeList, extractSteps, fetchEventLog, fetchEventLogWindows } from "~/_components/graph_renderer/db";
+import {
+  connectToDatabase,
+  createMyLinkList,
+  createMyNodeList,
+  extractSteps,
+  fetchEventLog,
+  fetchEventLogWindows,
+} from "~/_components/graph_renderer/db";
 
 export default async function Page() {
   await connectToDatabase();
@@ -21,14 +28,18 @@ export default async function Page() {
           <h2>{node.id}</h2>
           <p>Level: {node.level}</p>
           <p>Steps: {node.steps.join(", ")}</p>
-          <p>Coordinates: ({node.x}, {node.y})</p>
+          <p>
+            Coordinates: ({node.x}, {node.y})
+          </p>
         </div>
       ))}
 
       <h2>Links</h2>
       {links.map((link, index) => (
         <div key={index}>
-          <p>{link.source} - {link.target}</p>
+          <p>
+            {link.source} - {link.target}
+          </p>
           <p>Weight: {link.weight}</p>
           <p>Steps: {link.steps.join(", ")}</p>
         </div>
